@@ -63,18 +63,10 @@ jobs:
           VERSION: ${{ env.VERSION }}
         run: |
           echo "VERSION: $VERSION"
-          mvn package
-          docker build -t my-app:latest .
-          cd target
-          ls -l
-          docker images
-          docker run -d -p 8080:8080 --name my-app-container my-app:latest
-          sleep 10
-          docker ps -a
-          docker logs my-app-container || true
-          docker inspect my-app-container --format='{{.State.ExitCode}}'
-          echo "VERSION: $VERSION"
-        # curl http://localhost:8080
+          mvn clean package
+          java -jar target/demo-0.0.1-SNAPSHOT.jar &
+          sleep 15
+          curl -f http://localhost:8080
           
         #  docker tag $ECR_REPOSITORY:$VERSION ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY:$VERSION
         # docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY:${{ steps.version.outputs.VERSION }}
