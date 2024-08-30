@@ -65,7 +65,10 @@ jobs:
           echo "VERSION: $VERSION"
           mvn package
           docker build -t $ECR_REPOSITORY:$VERSION .
-          docker tag $ECR_REPOSITORY:$VERSION/$ECR_REPOSITORY:$VERSION
+          docker run -d -p 8080:8080 $ECR_REPOSITORY:$VERSION
+          curl http://localhost:8080
+          echo "VERSION: $VERSION"
+        #  docker tag $ECR_REPOSITORY:$VERSION ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY:$VERSION
         # docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY:${{ steps.version.outputs.VERSION }}
 
   deploy-artifact:
