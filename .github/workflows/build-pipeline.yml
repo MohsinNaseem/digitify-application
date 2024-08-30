@@ -68,9 +68,11 @@ jobs:
           cd target
           ls -l
           docker images
-          docker run -d -p 8080:8080 my-app:latest
+          docker run -d -p 8080:8080 --name my-app-container my-app:latest
           sleep 10
-          docker ps
+          docker ps -a
+          docker logs my-app-container || true
+          docker inspect my-app-container --format='{{.State.ExitCode}}'
           echo "VERSION: $VERSION"
         # curl http://localhost:8080
           
