@@ -56,16 +56,16 @@ jobs:
       - name: Generate artificat version for tagging
         id: version
         run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-             echo "VERSION is $VERSION"
 
       - name: Build & Push Docker image to ECR
         env:
-          ECR_REPOSITORY: your-ecr-repository
+          ECR_REPOSITORY: "my-app"
           VERSION: ${{ env.VERSION }}
         run: |
+          echo "VERSION: $VERSION"
           mvn package
-          docker build -t $ECR_REPOSITORY:${{ steps.version.outputs.VERSION }} .
-          docker tag $ECR_REPOSITORY:${{ steps.version.outputs.VERSION }} ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY:${{ steps.version.outputs.VERSION }}
+          docker build -t $ECR_REPOSITORY:$VERSION .
+          docker tag $ECR_REPOSITORY:$VERSION/$ECR_REPOSITORY:$VERSION
         # docker push ${{ steps.ecr-login.outputs.registry }}/$ECR_REPOSITORY:${{ steps.version.outputs.VERSION }}
 
   deploy-artifact:
