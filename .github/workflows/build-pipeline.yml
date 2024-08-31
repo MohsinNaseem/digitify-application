@@ -38,6 +38,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -67,6 +69,7 @@ jobs:
           mvn package
           docker build -t ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${IMAGE}:${TAG} .
           echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
+          pwd
 
       - name: Update image tag
         env: 
@@ -75,12 +78,9 @@ jobs:
         run: |
             export TAG="${{ steps.build.outputs.image_tag }}"
             pwd
+            ls
             echo $TAG
             sed -i '/^  tag:/s/: .*/: '"$TAG"'/' helm/values.yaml
-
-      - name: Commit and Push Changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Update image tag to 
-          branch: main
-          file_pattern: helm/values.yaml
+            git add helm/values.yaml
+            git commit -m "Update image tag to $TAG"
+            git push origin main
