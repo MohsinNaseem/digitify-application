@@ -81,6 +81,8 @@ jobs:
             ls
             echo $TAG
             sed -i '/^  tag:/s/: .*/: '"$TAG"'/' helm/values.yaml
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
             git add helm/values.yaml
             git commit -m "Update image tag to $TAG"
             git push origin main
