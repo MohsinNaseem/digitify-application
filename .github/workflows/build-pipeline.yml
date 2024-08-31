@@ -69,13 +69,13 @@ jobs:
           echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
 
       - name: Update image tag
-        working-directory: digitify-application
         env: 
           ACCOUNT_ID: 099199746132
           REGION: "eu-north-1"
         run: |
-            export IMAGE="${ACCOUNT_ID}\.dkr\.ecr\.${REGION}\.amazonaws\.com\/"
             export TAG="${{ steps.build.outputs.image_tag }}"
+            pwd
+            echo $TAG
             sed -i '/^  tag:/s/: .*/: '"$TAG"'/' helm/values.yaml
 
       - name: Commit and Push Changes
