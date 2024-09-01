@@ -54,9 +54,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: "eu-north-1"
 
-      - name: Login to Amazon ECR
-        id: ecr-login
-        uses: aws-actions/amazon-ecr-login@v2
+      # - name: Login to Amazon ECR
+      #   id: ecr-login
+      #   uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build & Push Docker image to ECR
         id: build
@@ -72,9 +72,9 @@ jobs:
           echo "docker building image"
           docker build -t digitify-application .
           echo "tagging docker image"
-          docker tag digitify-application:latest 099199746132.dkr.ecr.eu-north-1.amazonaws.com/digitify-application:latest
+          docker tag digitify-application:${TAG} 099199746132.dkr.ecr.eu-north-1.amazonaws.com/digitify-application:${TAG}
           echo "pushing docker image"
-          docker push 099199746132.dkr.ecr.eu-north-1.amazonaws.com/digitify-application:latest
+          docker push 099199746132.dkr.ecr.eu-north-1.amazonaws.com/digitify-application:${TAG}
           echo "docker image pushed to ecr"
           echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
 
