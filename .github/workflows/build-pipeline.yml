@@ -110,7 +110,7 @@ jobs:
       - name: Run deploy script
         env:
           AWS_REGION: "eu-north-1"
-          EKS_CLUSTER_NAME: "your-cluster-name"
+          EKS_CLUSTER_NAME: "mohsin-eks-cluster"
           RELEASE_NAME: "digitify-application-staging"
         run: |
          chmod +x ./deploy.sh
