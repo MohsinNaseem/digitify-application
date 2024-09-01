@@ -4,7 +4,7 @@ replicaCount: 2
 
 image:
   repository: your-repo/digitify-app
-  tag: 2b9711f3d7eff3fba06cc35601531a6fe27210d8
+  tag: 076a2bdd7d619ee7f5012800a4eac7cd30644563
   pullPolicy: IfNotPresent
 
 service:
