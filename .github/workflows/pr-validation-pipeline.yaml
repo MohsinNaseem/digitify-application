@@ -1,0 +1,90 @@
+name: PR Validation Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build and Run Tests
+        run: mvn clean install
+
+      - name: Static Code Analysis
+        run: mvn checkstyle:check
+
+    #   - name: Run Security Scan
+    #     run: |
+    #       mvn org.owasp:dependency-check-maven:check -Dformat=ALL
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Code Coverage Report
+        run: mvn jacoco:report
+
+      - name: Publish Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: target/surefire-reports/
+
+      - name: Publish Code Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: target/site/jacoco/
+
+#   notify:
+#     needs: build-and-test
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Notify Slack of Build Status
+#         if: always()
+#         uses: 8398a7/action-slack@v3
+#         with:
+#           status: ${{ job.status }}
+#           fields: repo,message,commit,author
+#         env:
+#           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  docker-build:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build & Push Docker image to ECR
+        run: |
+          mvn package
+          echo "docker image building........."
+          docker build -t digitify-application .
+          echo "docker image built successfully"
+
+
