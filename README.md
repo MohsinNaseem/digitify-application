@@ -15,7 +15,7 @@ This is a Spring Boot application that is containerized using Docker and deploye
 - **helm/**: Contains Helm charts and the `values.yaml` file for deploying the application to a Kubernetes cluster.
 - **.github/workflows/**: Contains the CI/CD pipeline configuration for GitHub Actions.
 
-## Getting Started.
+## Getting Started
 
 ### Prerequisites
 
