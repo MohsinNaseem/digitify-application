@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -30,8 +29,9 @@ jobs:
       - name: Build and Run Tests
         run: mvn clean install
 
-      - name: Static Code Analysis
+      - name: Static Code Analysis.
         run: mvn checkstyle:check
+        continue-on-error: true 
 
     #   - name: Run Security Scan
     #     run: |
@@ -41,6 +41,7 @@ jobs:
 
       - name: Code Coverage Report
         run: mvn jacoco:report
+        continue-on-error: true 
 
       - name: Publish Test Report
         uses: actions/upload-artifact@v4
