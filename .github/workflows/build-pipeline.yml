@@ -72,7 +72,7 @@ jobs:
           echo "docker building image"
           docker build -t digitify-application .
           echo "tagging docker image"
-          docker tag digitify-application:${TAG} 099199746132.dkr.ecr.eu-north-1.amazonaws.com/digitify-application:${TAG}
+          docker tag digitify-application:latest 099199746132.dkr.ecr.eu-north-1.amazonaws.com/digitify-application:${TAG}
           echo "pushing docker image"
           docker push 099199746132.dkr.ecr.eu-north-1.amazonaws.com/digitify-application:${TAG}
           echo "docker image pushed to ecr"
