@@ -68,8 +68,8 @@ jobs:
         run: |
           mvn package
           docker build -t ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${IMAGE}:${TAG} .
+          docker push ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${IMAGE}:${TAG}
           echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
-          pwd
 
       - name: Update image tag
         env: 
@@ -83,3 +83,78 @@ jobs:
             git add helm/values.yaml
             git commit -m "Update image tag to $TAG"
             git push origin main
+
+  # deploy-staging:
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'pull_request
+  #   needs: build-artifact
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
+  #     - name: Set up kubectl
+  #       uses: azure/setup-kubectl@v4
+  #       with:
+  #        version: '4.0.0'
+
+  #     - name: Set up Helm
+  #       uses: azure/setup-helm@v4.2.0
+  #       with:
+  #        version: 'v4.2.0'
+       
+        # - name: Set up AWS CLI
+        #   uses: unfor19/install-aws-cli-action@v1
+        #   with:
+        #     version: 2
+
+        # OR 
+
+        # - name: Install AWS CLI
+        # run: |
+        #   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        #   unzip awscliv2.zip
+        #   sudo ./aws/install
+
+  #     - name: Run deploy script
+  #       run: |
+  #        chmod +x ./deploy.sh
+  #        ./deploy.sh
+
+  # deploy_production:
+  #   needs: [ci, deploy_staging]
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  #   environment: production
+
+  #   steps:
+  #     - name: Manual Approval
+  #       uses: hmarr/auto-approve-action@v2.1.0
+  #       with:
+  #         approve: true
+
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+        
+        # - name: Manual Approval
+        # if: always()
+        # uses: chrnorm/deploy-approval-action@v1
+        # with:
+        #   approvers: user1, user2  # Replace with actual GitHub usernames
+        #   environment: production
+
+  #     - name: Deploy to Production
+  #       run: |
+  #         # Commands to deploy to your production environment
+  #         # For example, using kubectl, terraform, or any other tool
+  #         echo "Deploying to production environment"
+
+
+      # Add steps for deployment
+      # Example: Deploying to ECS or another service using the pushed Docker image
+      # You may use aws-actions/amazon-ecs-deploy-task-definition@v1 or another deployment action
