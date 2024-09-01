@@ -3,7 +3,7 @@ namespace: digitify-namespace
 replicaCount: 2
 
 image:
-  repository: your-repo/digitify-app
+  repository: digitify-application
   tag: 2b9711f3d7eff3fba06cc35601531a6fe27210d8
   pullPolicy: IfNotPresent
 
@@ -33,5 +33,5 @@ resources:
 hpa:
   enabled: true
   minReplicas: 2
-  maxReplicas: 10
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 80
