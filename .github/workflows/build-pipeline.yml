@@ -67,9 +67,14 @@ jobs:
           TAG : "${{ github.sha }}"
         run: |
           mvn package
+          echo "Logging in to ECR..."
           aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 099199746132.dkr.ecr.eu-north-1.amazonaws.com
-          docker build -t ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${IMAGE}:${TAG} .
-          docker push ${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${IMAGE}:${TAG}
+          echo "Login successful"
+          echo "docker building image"
+          docker build -t ${ACCOUNT_ID}.dkr.ecr.eu-north-1.amazonaws.com/${IMAGE}:${TAG} .
+          echo "pushing docker image"
+          docker push ${ACCOUNT_ID}.dkr.ecr.eu-north-1.amazonaws.com/${IMAGE}:${TAG}
+          echo "docker image pushed to ecr"
           echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
 
       - name: Update image tag
