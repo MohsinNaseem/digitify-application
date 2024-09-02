@@ -116,6 +116,8 @@ jobs:
   deploy_production:
     needs: [unit-testing,build-artifact,deploy-staging]
     runs-on: ubuntu-latest
+    permissions:
+      deployments: write
   #   environment: production
 
     steps:
