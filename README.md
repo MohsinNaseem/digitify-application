@@ -29,5 +29,5 @@ This is a Spring Boot application that is containerized using Docker and deploye
 
 1. **Clone the repository**:
    ```sh
-   git clone https://github.com/your-username/your-repository.git
-   cd your-repository
+   git clone https://github.com/MohsinNaseem/digitify-application.git
+   cd digitify-application
