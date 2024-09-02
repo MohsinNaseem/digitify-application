@@ -107,40 +107,44 @@ jobs:
       - name: Run deploy script
         env:
           AWS_REGION: "eu-north-1"
-          EKS_CLUSTER_NAME: "mohsin-eks-cluster"
+          EKS_CLUSTER_NAME: "mohsin-eks-cluster-staging"
           RELEASE_NAME: "digitify-application-staging"
         run: |
          chmod +x ./deploy.sh
          ./deploy.sh
 
-  # deploy_production:
-  #   needs: [ci, deploy_staging]
-  #   runs-on: ubuntu-latest
+  deploy_production:
+    needs: [unit-testing,build-artifact,deploy-staging]
+    runs-on: ubuntu-latest
   #   environment: production
 
-  #   steps:
-  #     - name: Manual Approval
-  #       uses: hmarr/auto-approve-action@v2.1.0
-  #       with:
-  #         approve: true
+    steps:
 
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-        
-        # - name: Manual Approval
-        # if: always()
-        # uses: chrnorm/deploy-approval-action@v1
-        # with:
-        #   approvers: user1, user2  # Replace with actual GitHub usernames
-        #   environment: production
-
-  #     - name: Deploy to Production
-  #       run: |
-  #         # Commands to deploy to your production environment
-  #         # For example, using kubectl, terraform, or any other tool
-  #         echo "Deploying to production environment"
-
-
-      # Add steps for deployment
-      # Example: Deploying to ECS or another service using the pushed Docker image
-      # You may use aws-actions/amazon-ecs-deploy-task-definition@v1 or another deployment action
+      - name: Checkout code
+        uses: actions/checkout@v4
+  
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: "eu-north-1"
+  
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+      
+      - name: Manual Approval
+        if: always()
+        uses: chrnorm/deploy-approval-action@v2
+        with:
+          approvers: MohsinNaseem
+          environment: production
+  
+      - name: Run deploy script
+        env:
+          AWS_REGION: "eu-north-1"
+          EKS_CLUSTER_NAME: "mohsin-eks-cluster-production"
+          RELEASE_NAME: "digitify-application-production"
+        run: |
+           chmod +x ./deploy.sh
+           ./deploy.sh
