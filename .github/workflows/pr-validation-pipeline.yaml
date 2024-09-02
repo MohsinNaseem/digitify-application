@@ -31,7 +31,13 @@ jobs:
 
       - name: Static Code Analysis.
         run: mvn checkstyle:check
-        continue-on-error: true 
+        continue-on-error: true
+
+      # - name: Run SonarQube Scan
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   run: mvn sonar:sonar -Dsonar.projectKey=my-project-key -Dsonar.host.url=https://sonarcloud.io
+
 
     #   - name: Run Security Scan
     #     run: |
@@ -39,21 +45,21 @@ jobs:
     #     env:
     #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Code Coverage Report
-        run: mvn jacoco:report
-        continue-on-error: true 
+    #   - name: Code Coverage Report
+    #     run: mvn jacoco:report
+    #     continue-on-error: true 
 
-      - name: Publish Test Report
+      - name: Upload unit test results
         uses: actions/upload-artifact@v4
         with:
-          name: test-report
-          path: target/surefire-reports/
+          name: unit-test-results
+          path: target/surefire-reports
 
-      - name: Publish Code Coverage Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: code-coverage-report
-          path: target/site/jacoco/
+    #   - name: Publish Code Coverage Report
+    #     uses: actions/upload-artifact@v4
+    #     with:
+    #       name: code-coverage-report
+    #       path: target/site/jacoco/
 
 #   notify:
 #     needs: build-and-test
@@ -80,11 +86,24 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build & Push Docker image to ECR
+
+      - name: Build Docker image
         run: |
           mvn package
           echo "docker image building........."
-          docker build -t digitify-application .
+          docker build -t digitify-application:${{ github.sha }} .
           echo "docker image built successfully"
 
+      - name: Scan Docker Image for Vulnerabilities
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: digitify-application:${{ github.sha }}
+          format: 'json'
+          output: 'trivy-report.json'
+          severity: 'HIGH,CRITICAL'
 
+      - name: Upload Trivy Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-report
+          path: trivy-report.json

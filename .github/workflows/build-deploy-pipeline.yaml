@@ -1,13 +1,15 @@
 name: Java Maven CI/CD Pipeline
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #   paths-ignore:
-  #     - 'helm/**'     
-  #     - 'README.md'   
-  #     - 'deploy.sh'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.gitignore'  
+      - 'helm/**'     
+      - 'README.md'   
+      - 'deploy.sh'
+      - '.github/workflows/**'
   workflow_dispatch:
     
 jobs:
