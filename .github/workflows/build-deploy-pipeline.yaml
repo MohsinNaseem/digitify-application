@@ -135,7 +135,7 @@ jobs:
       
       - name: Manual Approval
         if: always()
-        uses: chrnorm/deploy-approval-action@v2
+        uses: chrnorm/deployment-action@v2
         with:
           approvers: MohsinNaseem
           environment: production
