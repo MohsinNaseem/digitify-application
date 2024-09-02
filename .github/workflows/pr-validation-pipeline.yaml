@@ -95,7 +95,7 @@ jobs:
           echo "docker image built successfully"
 
       - name: Scan Docker Image for Vulnerabilities
-        uses: aquasecurity/trivy-action@v0.24.0
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: digitify-application:${{ github.sha }}
           format: 'json'
