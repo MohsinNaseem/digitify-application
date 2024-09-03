@@ -68,7 +68,7 @@ jobs:
       - name: Upload CheckStyle Report
         uses: actions/upload-artifact@v4
         with:
-          name: unit-test-results
+          name: checkstyle-report
           path: target/checkstyle-result.xml
 
     #   - name: Publish Code Coverage Report
