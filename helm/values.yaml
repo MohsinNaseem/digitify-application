@@ -4,7 +4,7 @@ replicaCount: 2
 
 image:
   repository: 099199746132.dkr.ecr.eu-north-1.amazonaws.com/digitify-application
-  tag: c6d4c46c64e2f13c0cf6c5d1fc799660161c3f7a
+  tag: 9b9164bb79ef50b3ba7d66aca1d11315b9fa7c0e
   pullPolicy: IfNotPresent
 
 service:
