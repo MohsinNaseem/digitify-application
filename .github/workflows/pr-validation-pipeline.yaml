@@ -27,10 +27,25 @@ jobs:
         run: mvn checkstyle:check
         continue-on-error: true
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env: 
+      - name: Build, Test, and SonarCloud Scan
+        run: mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+          -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      - name: Build, Test, and SonarCloud Scan
+        run: mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarcloud-github-action@master
+      #   env: 
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   with:
+      #    args: >
+      #      -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+      #      -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
 
     #   - name: Run Security Scan
     #     run: |
