@@ -40,15 +40,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=MohsinNaseem_digitify-application
 
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarcloud-github-action@master
-      #   env: 
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   with:
-      #    args: >
-      #      -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-      #      -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-
     #   - name: Run Security Scan
     #     run: |
     #       mvn org.owasp:dependency-check-maven:check -Dformat=ALL
