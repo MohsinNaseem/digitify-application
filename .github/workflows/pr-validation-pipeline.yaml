@@ -28,7 +28,7 @@ jobs:
         continue-on-error: true
 
       - name: Build, Test, and SonarCloud Scan
-        run: mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+        run: mvn clean verify sonar:sonar \
           -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
           -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
