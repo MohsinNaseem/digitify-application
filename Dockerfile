@@ -1,4 +1,4 @@
-# Use an official OpenJDK runtime as a parent image
+# Use an official OpenJDK 21 runtime as a parent image
 FROM eclipse-temurin:21-jdk-alpine
 
 # Set the working directory inside the container
